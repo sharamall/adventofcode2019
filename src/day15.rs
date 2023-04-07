@@ -147,7 +147,6 @@ fn run<T, V>(memory: &mut std::collections::HashMap<usize, i128>, mut found_oxyg
     where T: FnMut(usize) -> bool, V: FnMut(usize) {
     let mut seen: std::collections::HashMap<Position, Option<Vec<Node>>> = std::collections::HashMap::new();
     let mut cur_pos = Position { x: 0, y: 0 };
-    // println!("inserting into seen {:?}", cur_pos);
     seen.insert(cur_pos, Some(vec![Node { pos: cur_pos, parent: cur_pos, parent_dir: north() }]));
     let mut unseen_paths = vec![];
     let mut unseen_positions = std::collections::HashSet::new();
@@ -170,7 +169,6 @@ fn run<T, V>(memory: &mut std::collections::HashMap<usize, i128>, mut found_oxyg
             if val == 2 || val == 1 {
                 if let PathDir::TurningBack = path_dir {
                     unseen_positions.remove(&cur_pos);
-                    // println!("inserting open space into seen {:?}", cur_pos);
                     // we reached the end of the path and found an open space, add all to unseen and then go back to start
                     if let Some(_) = seen.insert(cur_pos, Some(cur_path.clone())) {
                         panic!("seeing the same open space again monkaS!");
@@ -190,7 +188,6 @@ fn run<T, V>(memory: &mut std::collections::HashMap<usize, i128>, mut found_oxyg
                         panic!("Wall was reported but node was seen before in same position. {:?}", cur_pos);
                     }
                 } else {
-                    // println!("inserting wall into seen {:?}", cur_pos);
                     unseen_positions.remove(&cur_pos);
                     if let Some(_) = seen.insert(cur_pos, None) {
                         panic!("seeing the same wall again monkaS!");
@@ -225,9 +222,6 @@ fn run<T, V>(memory: &mut std::collections::HashMap<usize, i128>, mut found_oxyg
                         north()
                     } else {
                         cur_path = unseen_paths.pop().unwrap();
-                        if seen.contains_key(&cur_path[cur_path.len() - 1].pos) {
-                            println!("sussy");
-                        }
                         if path_index as i32 == cur_path.len() as i32 - 2_i32 {
                             path_dir = PathDir::TurningBack;
                         } else {
